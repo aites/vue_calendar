@@ -21,12 +21,17 @@
 </template>
 
 <script>
-import {Mixin} from '../mixin/mixin'
-import {dateFns} from 'date-fns'
+import dateFns from 'date-fns'
+const weekDayArray = ['日', '月', '火', '水', '木', '金', '土'];
+const monthArray = [
+        "1月", "2月", "3月",
+        "4月", "5月", "6月",
+        "7月", "8月", "9月",
+        "10月", "11月", "12月"];
+let selectDayDate = new Date();
 
 export default {
   name: 'month',
-  mixins:[Mixin],
   data() {
     return {
       today: null,
@@ -42,9 +47,9 @@ export default {
   // DOMを構築してる間にも、HTTPの通信を行えるから
   // DOMがでかいと、Edgeだと、mountedよりも体感できるレベルで早くなる
   created() {
-    this.dayLabels = this.$data.weekDayArray.slice();
-    this.today = this.$data.selectDayDate;
-    this.selectedDate = this.$data.selectDayDate;
+    this.dayLabels = weekDayArray.slice();
+    this.today = selectDayDate;
+    this.selectedDate = selectDayDate;
     this.currDateCursor = this.today;
   },
   props: ['selectDate'],
@@ -56,7 +61,7 @@ export default {
       return this.currDateCursor.getFullYear();
     },
     currentMonthLabel() {
-      return this.$data.monthArray[this.currentMonth];
+      return monthArray[this.currentMonth];
     },
     daysArray() {
       const date = this.currDateCursor;
@@ -121,15 +126,15 @@ export default {
     },
     nextMonth() {
       this.currDateCursor = dateFns.addMonths(this.currDateCursor, 1);
-      this.$data.selectDayDate = this.currDateCursor;
+      selectDayDate = this.currDateCursor;
     },
     previousMonth() {
       this.currDateCursor = dateFns.addMonths(this.currDateCursor, -1);
-      this.$data.selectDayDate = this.currDateCursor;
+      selectDayDate = this.currDateCursor;
     },
     setSelectedDate(day) {
       this.selectedDate = day.date;
-      this.$data.selectDayDate = this.selectedDate;
+      selectDayDate = this.selectedDate;
       this.$emit('input', this.selectedDate);
     }
   },
@@ -138,10 +143,126 @@ export default {
       return dateFns.format(val, 'D');
     }
   }
-}
+};
 </script>
 
 
 <style lang='scss' scoped>
-@import "../style/global.scss";
+:root {
+  --white: hsl(0, 0%, 100%);
+  --blue-grey: hsl(210, 28%, 85%);
+  --grey: hsl(0, 0%, 96%);
+  --black: hsl(0, 0%, 20%);
+}
+
+html {
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  overflow: scroll;
+}
+
+body {
+  background: var(--white);
+  color: var(--black);
+  display: flex;
+  justify-content: center;
+}
+
+.calendar {
+  border: 1px solid var(--blue-grey);
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  width: 322px;
+
+  > .header {
+    padding: .75rem;
+    font-size: 1.25rem;
+    grid-column: 1 / span 7;
+    
+    >span {
+      flex: 1;
+      text-align: center;
+    }
+    
+    button {
+      border: none;
+      background: var(--white);
+      margin: 0 1rem;
+      padding: .25rem .5rem;
+      
+      &:hover {
+        background: var(--grey);
+        transition: background 150ms;
+      }
+    }
+  }
+
+  > * {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+  }
+
+  > .day {
+    color: var(--blue-grey);
+    font-size: 1rem;
+    
+    &.selected {
+      border: 1px solid var(--blue-grey);
+    }
+    
+    &.current {
+      color: var(--black);
+    }
+
+    &::before {
+      content: "";
+      display: inline-block;
+      height: 0;
+      padding-bottom: 100%;
+      width: 1px;
+    }
+    
+    button {
+      color: inherit;
+      background: transparent;
+      border: none;
+      height: 100%;
+      width: 100%;
+      &:hover {
+        background: var(--grey);
+        transition: background 150ms;
+      }
+    }
+  }
+
+  > .today {
+    background: var(--grey);
+    border-radius: 2px;
+  }
+}
+
+
+
+.text-center {
+  text-align: center;
+}
+
+.calendar__wrapper{
+  width: 1200px;
+  display: flex;
+  flex-wrap: wrap;
+}
 </style>
