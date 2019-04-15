@@ -4,7 +4,7 @@
           <div class="calendar">
               <header class="header">
               <button @click="previousMonth">&lt;&lt;</button>
-              <span>{{ currentYear }}　{{ monthArray[item - 1] }}</span>
+              <span>{{ currentYear }} {{ monthArray[item - 1] }}</span>
               <button @click="nextMonth">&gt;&gt;</button>
               </header>
               <div class="headings" v-for="dayLabel in dayLabels" :key='dayLabel'>
@@ -24,17 +24,13 @@
 </template>
 
 <script>
+import mixinData from './mixin/mixin.js'
 import dateFns from 'date-fns'
-const weekDayArray = ['日', '月', '火', '水', '木', '金', '土'];
-const monthArray = [
-        "1月", "2月", "3月",
-        "4月", "5月", "6月",
-        "7月", "8月", "9月",
-        "10月", "11月", "12月"];
 let selectDayDate = new Date();
 
 export default {
   name: 'year',
+  mixins: [mixinData],
   data() {
     return {
       today: null,
@@ -50,7 +46,7 @@ export default {
   // DOMを構築してる間にも、HTTPの通信を行えるから
   // DOMがでかいと、Edgeだと、mountedよりも体感できるレベルで早くなる
   created() {
-    this.dayLabels = weekDayArray.slice();
+    this.dayLabels = this.$data.weekDayArray.slice();
     this.today = selectDayDate;
     this.selectedDate = selectDayDate;
     this.currDateCursor = this.today;
@@ -64,7 +60,7 @@ export default {
       return this.currDateCursor.getFullYear();
     },
     currentMonthLabel() {
-      return monthArray[this.currentMonth];
+      return this.$data.weekDayArray[this.currentMonth];
     }
   },
   // DOMにアクセスする必要があるときは、 mounted を使う
@@ -87,16 +83,13 @@ export default {
     },
     nextMonth() {
       this.currDateCursor = dateFns.addMonths(this.currDateCursor, 1);
-      console.log(this.currDateCursor);
       selectDayDate = this.currDateCursor;
     },
     previousMonth() {
       this.currDateCursor = dateFns.addYears(this.currDateCursor, -1);
-      console.log(this.currDateCursor);
       selectDayDate = this.currDateCursor;
     },
     setSelectedDate(day) {
-      console.log(day);
       this.selectedDate = day.date;
       selectDayDate = this.selectedDate;
       this.$emit('input', this.selectedDate);

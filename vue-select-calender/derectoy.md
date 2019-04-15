@@ -44,3 +44,9 @@ Root::
 　　　  ├ global.scss
 　　　  ├ _mixins.scss
 　　　  └ _variables.scss
+
+
+
+
+インストールするもの
+npm install sass-loader node-sass --save-dev
