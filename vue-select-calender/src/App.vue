@@ -7,9 +7,9 @@
   <body>
       <div id="app">
           <button @click="transPage('calender_w')">week</button>
-          <button @click="transPage('calender_m')">month</button>
+          <button @click="transPage('calender_m')" :val="selectDay">month</button>
           <button @click="transPage('calender_y')">year</button>
-          <component :is="current_calender" v-bind:val="selectDayDate"></component>
+          <component :is="current_calender" :val="selectDay"></component>
       </div>
   </body>
   </html>
@@ -23,10 +23,10 @@ import Year from '../src/components/Year.vue';
 export default {
   name: 'app',
   data: function() {
-return {
+  return {
       current_calender : 'calender_m',
       selectDate: '',
-      selectDayDate: new Date()
+      selectDay: new Date()
   };
 },
   methods : {
