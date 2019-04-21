@@ -23,10 +23,11 @@
 <script>
 import mixinData from './mixin/mixin.js'
 import dateFns from 'date-fns'
-let selectDayDate = new Date();
+// let selectDayDate = new Date();
 
 export default {
   name: 'week',
+  props: ['cuurentDay'],
   mixins: [mixinData],
   data() {
       return {
@@ -34,9 +35,9 @@ export default {
         selectedDate: null,
         currDateCursor: null,
         dayLabels: null,
+        selectDayDate: this.cuurentDay
       };
     },
-    // props: ['selectDayDate'],
     // created
     // インスタンスの初期化が済んで props や computed にアクセスできる
     // DOMにはアクセスできない
@@ -45,8 +46,8 @@ export default {
     // DOMがでかいと、Edgeだと、mountedよりも体感できるレベルで早くなる
     created() {
       this.dayLabels = this.$data.weekDayArray.slice();
-      this.today = selectDayDate;
-      this.selectedDate = selectDayDate;
+      this.today = this.selectDayDate;
+      this.selectedDate = this.selectDayDate;
       this.currDateCursor = this.today;
     },
     // キャッシュが残らない
@@ -121,16 +122,16 @@ export default {
       },
       nextWeek() {
         this.currDateCursor = dateFns.addWeeks(this.currDateCursor, 1);
-        selectDayDate = this.currDateCursor;
+        this.selectDayDate = this.currDateCursor;
       },
       previousWeek() {
         this.currDateCursor = dateFns.addWeeks(this.currDateCursor, -1);
-        selectDayDate = this.currDateCursor;
+        this.selectDayDate = this.currDateCursor;
       },
       setSelectedDate(day) {
         this.selectedDate = day.date;
-        selectDayDate = this.selectedDate;
-        this.$emit('input', this.selectedDate);
+        this.selectDayDate = this.selectedDate;
+        this.$emit('clickDate', this.selectedDate);
       }
     },
     // 日付を表示する

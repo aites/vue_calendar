@@ -7,9 +7,10 @@
   <body>
       <div id="app">
           <button @click="transPage('calender_w')">week</button>
-          <button @click="transPage('calender_m')" :val="selectDay">month</button>
+          <button @click="transPage('calender_m')">month</button>
           <button @click="transPage('calender_y')">year</button>
-          <component :is="current_calender" :val="selectDay"></component>
+
+          <component :is="current_calender" v-on:clickDate="clickDate" :cuurentDay="selectDate"></component>
       </div>
   </body>
   </html>
@@ -22,11 +23,11 @@ import Year from '../src/components/Year.vue';
 
 export default {
   name: 'app',
+  props: ['cuurentDay'],
   data: function() {
   return {
       current_calender : 'calender_m',
-      selectDate: '',
-      selectDay: new Date()
+      selectDate: new Date()
   };
 },
   methods : {
@@ -34,8 +35,11 @@ export default {
      * currentPageを変更します。
      * @param {string} page : 変更先のコンポーネント名
      */
-    transPage : function(page){
+    transPage: function(page) {
         this.current_calender = page;
+    },
+    clickDate: function(date) {
+        this.selectDate = date;
     }
   },
   components: {

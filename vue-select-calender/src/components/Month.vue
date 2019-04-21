@@ -17,18 +17,17 @@
         {{ day.date | formatDateToDay }}
       </button>
     </div>
-    <div class="tetets">{{ selectDay }}</div>
   </div>
 </template>
 
 <script>
 import mixinData from './mixin/mixin.js'
 import dateFns from 'date-fns'
-let selectDayDate = new Date();
+// let selectDayDate = new Date();
 
 export default {
   name: 'month',
-  props: ['selectDay'],
+  props: ['cuurentDay'],
   mixins: [mixinData],
   data() {
     return {
@@ -36,7 +35,7 @@ export default {
       selectedDate: null,
       currDateCursor: null,
       dayLabels: null,
-      selectDayDate: selectDayDate
+      selectDayDate: this.cuurentDay
     };
   },
   // created
@@ -133,7 +132,7 @@ export default {
     setSelectedDate(day) {
       this.selectedDate = day.date;
       this.selectDayDate = this.selectedDate;
-      this.$emit('input', this.selectedDate);
+      this.$emit('clickDate', this.selectedDate);
     }
   },
   filters: {

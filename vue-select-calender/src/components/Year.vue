@@ -26,17 +26,19 @@
 <script>
 import mixinData from './mixin/mixin.js'
 import dateFns from 'date-fns'
-let selectDayDate = new Date();
+// let selectDayDate = new Date();
 
 export default {
   name: 'year',
   mixins: [mixinData],
+  props: ['cuurentDay'],
   data() {
     return {
       today: null,
       selectedDate: null,
       currDateCursor: null,
       dayLabels: null,
+      selectDayDate: this.cuurentDay
     };
   },
   // created
@@ -47,11 +49,10 @@ export default {
   // DOMがでかいと、Edgeだと、mountedよりも体感できるレベルで早くなる
   created() {
     this.dayLabels = this.$data.weekDayArray.slice();
-    this.today = selectDayDate;
-    this.selectedDate = selectDayDate;
+    this.today = this.selectDayDate;
+    this.selectedDate = this.selectDayDate;
     this.currDateCursor = this.today;
   },
-  props: ['selectDate'],
   computed: {
     currentMonth() {
       return this.currDateCursor.getMonth();
@@ -83,16 +84,16 @@ export default {
     },
     nextMonth() {
       this.currDateCursor = dateFns.addMonths(this.currDateCursor, 1);
-      selectDayDate = this.currDateCursor;
+      this.selectDayDate = this.currDateCursor;
     },
     previousMonth() {
       this.currDateCursor = dateFns.addYears(this.currDateCursor, -1);
-      selectDayDate = this.currDateCursor;
+      this.selectDayDate = this.currDateCursor;
     },
     setSelectedDate(day) {
       this.selectedDate = day.date;
-      selectDayDate = this.selectedDate;
-      this.$emit('input', this.selectedDate);
+      this.selectDayDate = this.selectedDate;
+      this.$emit('clickDate', this.selectedDate);
     },
     YdaysArray(item) {
       let date = this.currDateCursor;
